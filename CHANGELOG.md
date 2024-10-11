@@ -5,6 +5,7 @@ CHANGELOG
 ---
 
  * Add support for ratio checks for SVG files to the `Image` constraint
+ * Add the `Slug` constraint
 
 7.2
 ---
