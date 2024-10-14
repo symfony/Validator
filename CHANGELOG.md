@@ -18,6 +18,7 @@ CHANGELOG
  * Add the `Week` constraint
  * Add `CompoundConstraintTestCase` to ease testing Compound Constraints
  * Add context variable to `WhenValidator`
+ * Add `format` parameter to `DateTime` constraint violation message
 
 7.1
 ---
