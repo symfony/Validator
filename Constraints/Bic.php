@@ -58,14 +58,17 @@ class Bic extends Constraint
     public string $ibanMessage = 'This Business Identifier Code (BIC) is not associated with IBAN {{ iban }}.';
     public ?string $iban = null;
     public ?string $ibanPropertyPath = null;
-    public ?string $mode = self::VALIDATION_MODE_STRICT;
+    /**
+     * @var self::VALIDATION_MODE_*
+     */
+    public string $mode = self::VALIDATION_MODE_STRICT;
 
     /**
-     * @param array<string,mixed>|null $options
-     * @param string|null              $iban             An IBAN value to validate that its country code is the same as the BIC's one
-     * @param string|null              $ibanPropertyPath Property path to the IBAN value when validating objects
-     * @param string[]|null            $groups
-     * @param string|null              $mode             The mode used to validate the BIC; pass null to use the default mode (strict)
+     * @param array<string,mixed>|null     $options
+     * @param string|null                  $iban             An IBAN value to validate that its country code is the same as the BIC's one
+     * @param string|null                  $ibanPropertyPath Property path to the IBAN value when validating objects
+     * @param string[]|null                $groups
+     * @param self::VALIDATION_MODE_*|null $mode             The mode used to validate the BIC; pass null to use the default mode (strict)
      */
     public function __construct(
         ?array $options = null,
