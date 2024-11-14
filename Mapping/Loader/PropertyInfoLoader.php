@@ -19,10 +19,12 @@ use Symfony\Component\TypeInfo\Type as TypeInfoType;
 use Symfony\Component\TypeInfo\Type\BuiltinType;
 use Symfony\Component\TypeInfo\Type\CollectionType;
 use Symfony\Component\TypeInfo\Type\CompositeTypeInterface;
+use Symfony\Component\TypeInfo\Type\IntersectionType;
 use Symfony\Component\TypeInfo\Type\NullableType;
 use Symfony\Component\TypeInfo\Type\ObjectType;
-use Symfony\Component\TypeInfo\TypeIdentifier;
+use Symfony\Component\TypeInfo\Type\UnionType;
 use Symfony\Component\TypeInfo\Type\WrappingTypeInterface;
+use Symfony\Component\TypeInfo\TypeIdentifier;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -141,7 +143,22 @@ final class PropertyInfoLoader implements LoaderInterface
                 }
 
                 $type = $types;
-                $nullable = $type->isNullable();
+
+                // BC layer for type-info < 7.2
+                if (!class_exists(NullableType::class)) {
+                    $nullable = false;
+
+                    if ($type instanceof UnionType && $type->isNullable()) {
+                        $nullable = true;
+                        $type = $type->asNonNullable();
+                    }
+                } else {
+                    $nullable = $type->isNullable();
+
+                    if ($type instanceof NullableType) {
+                        $type = $type->getWrappedType();
+                    }
+                }
 
                 if ($type instanceof NullableType) {
                     $type = $type->getWrappedType();
@@ -194,6 +211,25 @@ final class PropertyInfoLoader implements LoaderInterface
 
     private function getTypeConstraint(TypeInfoType $type): ?Type
     {
+        // BC layer for type-info < 7.2
+        if (!interface_exists(CompositeTypeInterface::class)) {
+            if ($type instanceof UnionType || $type instanceof IntersectionType) {
+                return ($type->isA(TypeIdentifier::INT) || $type->isA(TypeIdentifier::FLOAT) || $type->isA(TypeIdentifier::STRING) || $type->isA(TypeIdentifier::BOOL)) ? new Type(['type' => 'scalar']) : null;
+            }
+
+            $baseType = $type->getBaseType();
+
+            if ($baseType instanceof ObjectType) {
+                return new Type(['type' => $baseType->getClassName()]);
+            }
+
+            if (TypeIdentifier::MIXED !== $baseType->getTypeIdentifier()) {
+                return new Type(['type' => $baseType->getTypeIdentifier()->value]);
+            }
+
+            return null;
+        }
+
         if ($type instanceof CompositeTypeInterface) {
             return $type->isIdentifiedBy(
                 TypeIdentifier::INT,
