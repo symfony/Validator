@@ -172,7 +172,7 @@ final class PropertyInfoLoader implements LoaderInterface
      */
     private function getPropertyTypes(string $className, string $property): TypeInfoType|array|null
     {
-        if (method_exists($this->typeExtractor, 'getType')) {
+        if (class_exists(TypeInfoType::class) && method_exists($this->typeExtractor, 'getType')) {
             return $this->typeExtractor->getType($className, $property);
         }
 
