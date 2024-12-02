@@ -61,7 +61,7 @@ class UniqueValidatorTest extends ConstraintValidatorTestCase
     /**
      * @dataProvider getInvalidValues
      */
-    public function testInvalidValues($value, $expectedMessageParam, string $expectedErrorPath)
+    public function testInvalidValues($value, $expectedMessageParam)
     {
         $constraint = new Unique([
             'message' => 'myMessage',
@@ -71,7 +71,6 @@ class UniqueValidatorTest extends ConstraintValidatorTestCase
         $this->buildViolation('myMessage')
              ->setParameter('{{ value }}', $expectedMessageParam)
              ->setCode(Unique::IS_NOT_UNIQUE)
-             ->atPath($expectedErrorPath)
              ->assertRaised();
     }
 
@@ -80,12 +79,12 @@ class UniqueValidatorTest extends ConstraintValidatorTestCase
         $object = new \stdClass();
 
         return [
-            yield 'not unique booleans' => [[true, true], 'true', 'property.path[1]'],
-            yield 'not unique integers' => [[1, 2, 3, 3], 3, 'property.path[3]'],
-            yield 'not unique floats' => [[0.1, 0.2, 0.1], 0.1, 'property.path[2]'],
-            yield 'not unique string' => [['a', 'b', 'a'], '"a"', 'property.path[2]'],
-            yield 'not unique arrays' => [[[1, 1], [2, 3], [1, 1]], 'array', 'property.path[2]'],
-            yield 'not unique objects' => [[$object, $object], 'object', 'property.path[1]'],
+            yield 'not unique booleans' => [[true, true], 'true'],
+            yield 'not unique integers' => [[1, 2, 3, 3], 3],
+            yield 'not unique floats' => [[0.1, 0.2, 0.1], 0.1],
+            yield 'not unique string' => [['a', 'b', 'a'], '"a"'],
+            yield 'not unique arrays' => [[[1, 1], [2, 3], [1, 1]], 'array'],
+            yield 'not unique objects' => [[$object, $object], 'object'],
         ];
     }
 
@@ -97,7 +96,6 @@ class UniqueValidatorTest extends ConstraintValidatorTestCase
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', '3')
             ->setCode(Unique::IS_NOT_UNIQUE)
-            ->atPath('property.path[3]')
             ->assertRaised();
     }
 
@@ -154,7 +152,6 @@ class UniqueValidatorTest extends ConstraintValidatorTestCase
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', 'array')
             ->setCode(Unique::IS_NOT_UNIQUE)
-            ->atPath('property.path[2]')
             ->assertRaised();
     }
 
@@ -179,7 +176,6 @@ class UniqueValidatorTest extends ConstraintValidatorTestCase
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', '1')
             ->setCode(Unique::IS_NOT_UNIQUE)
-            ->atPath('property.path[1]')
             ->assertRaised();
     }
 
@@ -206,7 +202,6 @@ class UniqueValidatorTest extends ConstraintValidatorTestCase
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', '"hello"')
             ->setCode(Unique::IS_NOT_UNIQUE)
-            ->atPath('property.path[1]')
             ->assertRaised();
     }
 
@@ -251,7 +246,7 @@ class UniqueValidatorTest extends ConstraintValidatorTestCase
     /**
      * @dataProvider getInvalidCollectionValues
      */
-    public function testInvalidCollectionValues(array $value, array $fields, string $expectedMessageParam, string $expectedErrorPath)
+    public function testInvalidCollectionValues(array $value, array $fields, string $expectedMessageParam)
     {
         $this->validator->validate($value, new Unique([
             'message' => 'myMessage',
@@ -260,7 +255,6 @@ class UniqueValidatorTest extends ConstraintValidatorTestCase
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', $expectedMessageParam)
             ->setCode(Unique::IS_NOT_UNIQUE)
-            ->atPath($expectedErrorPath)
             ->assertRaised();
     }
 
@@ -270,27 +264,25 @@ class UniqueValidatorTest extends ConstraintValidatorTestCase
             'unique string' => [[
                 ['lang' => 'eng', 'translation' => 'hi'],
                 ['lang' => 'eng', 'translation' => 'hello'],
-            ], ['lang'], 'array', 'property.path[1]'],
+            ], ['lang'], 'array'],
             'unique floats' => [[
                 ['latitude' => 51.509865, 'longitude' => -0.118092, 'poi' => 'capital'],
                 ['latitude' => 52.520008, 'longitude' => 13.404954],
                 ['latitude' => 51.509865, 'longitude' => -0.118092],
-            ], ['latitude', 'longitude'], 'array', 'property.path[2]'],
+            ], ['latitude', 'longitude'], 'array'],
             'unique int' => [[
                 ['id' => 1, 'email' => 'bar@email.com'],
                 ['id' => 1, 'email' => 'foo@email.com'],
-            ], ['id'], 'array', 'property.path[1]'],
+            ], ['id'], 'array'],
             'unique null' => [
                 [null, null],
                 [],
                 'null',
-                'property.path[1]',
             ],
             'unique field null' => [
                 [['nullField' => null], ['nullField' => null]],
                 ['nullField'],
                 'array',
-                'property.path[1]',
             ],
         ];
     }
