@@ -498,4 +498,140 @@ class ImageValidatorTest extends ConstraintValidatorTestCase
             ]),
         ];
     }
+
+    /** @dataProvider provideSvgWithViolation */
+    public function testSvgWithViolation(string $image, Image $constraint, string $violation, array $parameters = [])
+    {
+        $this->validator->validate($image, $constraint);
+
+        $this->buildViolation('myMessage')
+            ->setCode($violation)
+            ->setParameters($parameters)
+            ->assertRaised();
+    }
+
+    public static function provideSvgWithViolation(): iterable
+    {
+        yield 'No size svg' => [
+            __DIR__.'/Fixtures/test_no_size.svg',
+            new Image(allowLandscape: false, sizeNotDetectedMessage: 'myMessage'),
+            Image::SIZE_NOT_DETECTED_ERROR,
+        ];
+
+        yield 'Landscape SVG not allowed' => [
+            __DIR__.'/Fixtures/test_landscape.svg',
+            new Image(allowLandscape: false, allowLandscapeMessage: 'myMessage'),
+            Image::LANDSCAPE_NOT_ALLOWED_ERROR,
+            [
+                '{{ width }}' => 500,
+                '{{ height }}' => 200,
+            ],
+        ];
+
+        yield 'Portrait SVG not allowed' => [
+            __DIR__.'/Fixtures/test_portrait.svg',
+            new Image(allowPortrait: false, allowPortraitMessage: 'myMessage'),
+            Image::PORTRAIT_NOT_ALLOWED_ERROR,
+            [
+                '{{ width }}' => 200,
+                '{{ height }}' => 500,
+            ],
+        ];
+
+        yield 'Square SVG not allowed' => [
+            __DIR__.'/Fixtures/test_square.svg',
+            new Image(allowSquare: false, allowSquareMessage: 'myMessage'),
+            Image::SQUARE_NOT_ALLOWED_ERROR,
+            [
+                '{{ width }}' => 500,
+                '{{ height }}' => 500,
+            ],
+        ];
+
+        yield 'Landscape with width attribute SVG allowed' => [
+            __DIR__.'/Fixtures/test_landscape_width.svg',
+            new Image(allowLandscape: false, allowLandscapeMessage: 'myMessage'),
+            Image::LANDSCAPE_NOT_ALLOWED_ERROR,
+            [
+                '{{ width }}' => 600,
+                '{{ height }}' => 200,
+            ],
+        ];
+
+        yield 'Landscape with height attribute SVG not allowed' => [
+            __DIR__.'/Fixtures/test_landscape_height.svg',
+            new Image(allowLandscape: false, allowLandscapeMessage: 'myMessage'),
+            Image::LANDSCAPE_NOT_ALLOWED_ERROR,
+            [
+                '{{ width }}' => 500,
+                '{{ height }}' => 300,
+            ],
+        ];
+
+        yield 'Landscape with width and height attribute SVG not allowed' => [
+            __DIR__.'/Fixtures/test_landscape_width_height.svg',
+            new Image(allowLandscape: false, allowLandscapeMessage: 'myMessage'),
+            Image::LANDSCAPE_NOT_ALLOWED_ERROR,
+            [
+                '{{ width }}' => 600,
+                '{{ height }}' => 300,
+            ],
+        ];
+
+        yield 'SVG Min ratio 2' => [
+            __DIR__.'/Fixtures/test_square.svg',
+            new Image(minRatio: 2, minRatioMessage: 'myMessage'),
+            Image::RATIO_TOO_SMALL_ERROR,
+            [
+                '{{ ratio }}' => '1',
+                '{{ min_ratio }}' => '2',
+            ],
+        ];
+
+        yield 'SVG Min ratio 0.5' => [
+            __DIR__.'/Fixtures/test_square.svg',
+            new Image(maxRatio: 0.5, maxRatioMessage: 'myMessage'),
+            Image::RATIO_TOO_BIG_ERROR,
+            [
+                '{{ ratio }}' => '1',
+                '{{ max_ratio }}' => '0.5',
+            ],
+        ];
+    }
+
+    /** @dataProvider provideSvgWithoutViolation */
+    public function testSvgWithoutViolation(string $image, Image $constraint)
+    {
+        $this->validator->validate($image, $constraint);
+
+        $this->assertNoViolation();
+    }
+
+    public static function provideSvgWithoutViolation(): iterable
+    {
+        yield 'Landscape SVG allowed' => [
+            __DIR__.'/Fixtures/test_landscape.svg',
+            new Image(allowLandscape: true, allowLandscapeMessage: 'myMessage'),
+        ];
+
+        yield 'Portrait SVG allowed' => [
+            __DIR__.'/Fixtures/test_portrait.svg',
+            new Image(allowPortrait: true, allowPortraitMessage: 'myMessage'),
+        ];
+
+        yield 'Square SVG allowed' => [
+            __DIR__.'/Fixtures/test_square.svg',
+            new Image(allowSquare: true, allowSquareMessage: 'myMessage'),
+        ];
+
+        yield 'SVG Min ratio 1' => [
+            __DIR__.'/Fixtures/test_square.svg',
+            new Image(minRatio: 1, minRatioMessage: 'myMessage'),
+        ];
+
+        yield 'SVG Max ratio 1' => [
+            __DIR__.'/Fixtures/test_square.svg',
+            new Image(maxRatio: 1, maxRatioMessage: 'myMessage'),
+        ];
+    }
 }

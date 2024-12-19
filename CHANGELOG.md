@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+7.3
+---
+
+ * Add support for ratio checks for SVG files to the `Image` constraint
+
 7.2
 ---
 
