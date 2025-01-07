@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Validator\Constraints;
 
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint;
 
 /**
@@ -26,14 +27,14 @@ class Slug extends Constraint
     public string $message = 'This value is not a valid slug.';
     public string $regex = '/^[a-z0-9]+(?:-[a-z0-9]+)*$/';
 
+    #[HasNamedArguments]
     public function __construct(
-        ?array $options = null,
         ?string $regex = null,
         ?string $message = null,
         ?array $groups = null,
         mixed $payload = null,
     ) {
-        parent::__construct($options, $groups, $payload);
+        parent::__construct([], $groups, $payload);
 
         $this->message = $message ?? $this->message;
         $this->regex = $regex ?? $this->regex;

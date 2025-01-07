@@ -63,9 +63,7 @@ class SlugValidatorTest extends ConstraintValidatorTestCase
      */
     public function testInvalidSlugs($slug)
     {
-        $constraint = new Slug([
-            'message' => 'myMessage',
-        ]);
+        $constraint = new Slug(message: 'myMessage');
 
         $this->validator->validate($slug, $constraint);
 
