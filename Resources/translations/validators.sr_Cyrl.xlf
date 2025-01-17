@@ -468,7 +468,7 @@
             </trans-unit>
             <trans-unit id="120">
                 <source>This value is not a valid slug.</source>
-                <target state="needs-review-translation">Ова вредност није важећи слуг.</target>
+                <target>Ова вредност није валидан слуг.</target>
             </trans-unit>
         </body>
     </file>
