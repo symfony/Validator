@@ -46,12 +46,12 @@ class DateTime extends Constraint
     public function __construct(string|array|null $format = null, ?string $message = null, ?array $groups = null, mixed $payload = null, ?array $options = null)
     {
         if (\is_array($format)) {
-            trigger_deprecation('symfony/validator', '7.2', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
+            trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
 
             $options = array_merge($format, $options ?? []);
         } elseif (null !== $format) {
             if (\is_array($options)) {
-                trigger_deprecation('symfony/validator', '7.2', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
+                trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
             } else {
                 $options = [];
             }

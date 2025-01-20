@@ -36,21 +36,21 @@ class Callback extends Constraint
     {
         // Invocation through attributes with an array parameter only
         if (\is_array($callback) && 1 === \count($callback) && isset($callback['value'])) {
-            trigger_deprecation('symfony/validator', '7.2', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
+            trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
 
             $callback = $callback['value'];
         }
 
         if (!\is_array($callback) || (!isset($callback['callback']) && !isset($callback['groups']) && !isset($callback['payload']))) {
             if (\is_array($options)) {
-                trigger_deprecation('symfony/validator', '7.2', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
+                trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
             } else {
                 $options = [];
             }
 
             $options['callback'] = $callback;
         } else {
-            trigger_deprecation('symfony/validator', '7.2', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
+            trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
 
             $options = array_merge($callback, $options ?? []);
         }

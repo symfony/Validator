@@ -85,12 +85,12 @@ class Length extends Constraint
         ?array $options = null,
     ) {
         if (\is_array($exactly)) {
-            trigger_deprecation('symfony/validator', '7.2', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
+            trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
 
             $options = array_merge($exactly, $options ?? []);
             $exactly = $options['value'] ?? null;
         } elseif (\is_array($options)) {
-            trigger_deprecation('symfony/validator', '7.2', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
+            trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
         } else {
             $options = [];
         }

@@ -62,7 +62,7 @@ class RangeTest extends TestCase
     {
         $this->expectException(MissingOptionsException::class);
         $this->expectExceptionMessage('Either option "min", "minPropertyPath", "max" or "maxPropertyPath" must be given');
-        new Range([]);
+        new Range();
     }
 
     public function testThrowsNoDefaultOptionConfiguredException()

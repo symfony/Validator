@@ -55,12 +55,12 @@ class Regex extends Constraint
         ?array $options = null,
     ) {
         if (\is_array($pattern)) {
-            trigger_deprecation('symfony/validator', '7.2', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
+            trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
 
             $options = array_merge($pattern, $options ?? []);
         } elseif (null !== $pattern) {
             if (\is_array($options)) {
-                trigger_deprecation('symfony/validator', '7.2', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
+                trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
             } else {
                 $options = [];
             }

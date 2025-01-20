@@ -75,7 +75,7 @@ class CssColor extends Constraint
         if (!$formats) {
             $options['value'] = self::$validationModes;
         } elseif (\is_array($formats) && \is_string(key($formats))) {
-            trigger_deprecation('symfony/validator', '7.2', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
+            trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
 
             $options = array_merge($formats, $options ?? []);
         } elseif (\is_array($formats)) {
