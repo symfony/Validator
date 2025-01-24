@@ -4,6 +4,37 @@ CHANGELOG
 7.3
 ---
 
+ * Deprecate defining custom constraints not supporting named arguments
+
+   Before:
+
+   ```php
+   use Symfony\Component\Validator\Constraint;
+
+   class CustomConstraint extends Constraint
+   {
+       public function __construct(array $options)
+       {
+           // ...
+       }
+   }
+   ```
+
+   After:
+
+   ```php
+   use Symfony\Component\Validator\Attribute\HasNamedArguments;
+   use Symfony\Component\Validator\Constraint;
+
+   class CustomConstraint extends Constraint
+   {
+       #[HasNamedArguments]
+       public function __construct($option1, $option2, $groups, $payload)
+       {
+           // ...
+       }
+   }
+   ```
  * Deprecate passing an array of options to the constructors of the constraint classes, pass each option as a dedicated argument instead
 
    Before:

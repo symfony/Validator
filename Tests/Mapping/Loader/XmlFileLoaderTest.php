@@ -184,7 +184,7 @@ class XmlFileLoaderTest extends TestCase
         $loader = new XmlFileLoader(__DIR__.'/constraint-without-named-arguments-support.xml');
         $metadata = new ClassMetadata(DummyEntityConstraintWithoutNamedArguments::class);
 
-        $this->expectUserDeprecationMessage('Since symfony/validator 7.2: Using constraints not supporting named arguments is deprecated. Try adding the HasNamedArguments attribute to Symfony\Component\Validator\Tests\Mapping\Loader\Fixtures\ConstraintWithoutNamedArguments.');
+        $this->expectUserDeprecationMessage('Since symfony/validator 7.3: Using constraints not supporting named arguments is deprecated. Try adding the HasNamedArguments attribute to Symfony\Component\Validator\Tests\Mapping\Loader\Fixtures\ConstraintWithoutNamedArguments.');
 
         $loader->loadClassMetadata($metadata);
     }
