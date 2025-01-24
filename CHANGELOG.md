@@ -4,6 +4,25 @@ CHANGELOG
 7.3
 ---
 
+ * Deprecate passing an array of options to the constructors of the constraint classes, pass each option as a dedicated argument instead
+
+   Before:
+
+   ```php
+   new NotNull([
+       'groups' => ['foo', 'bar'],
+       'message' => 'a custom constraint violation message',
+   ])
+   ```
+
+   After:
+
+   ```php
+   new NotNull(
+       groups: ['foo', 'bar'],
+       message: 'a custom constraint violation message',
+   )
+   ```
  * Add support for ratio checks for SVG files to the `Image` constraint
  * Add the `Slug` constraint
 
