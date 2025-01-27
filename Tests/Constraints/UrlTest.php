@@ -74,9 +74,9 @@ class UrlTest extends TestCase
         self::assertFalse($cConstraint->requireTld);
 
         [$dConstraint] = $metadata->properties['d']->getConstraints();
-        self::assertSame(['http', 'https'], $aConstraint->protocols);
-        self::assertFalse($aConstraint->relativeProtocol);
-        self::assertNull($aConstraint->normalizer);
+        self::assertSame(['http', 'https'], $dConstraint->protocols);
+        self::assertFalse($dConstraint->relativeProtocol);
+        self::assertNull($dConstraint->normalizer);
         self::assertTrue($dConstraint->requireTld);
     }
 
