@@ -13,6 +13,7 @@ namespace Symfony\Component\Validator\Tests\Constraints;
 
 use Symfony\Component\Validator\Constraints\Blank;
 use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NegativeOrZero;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -47,6 +48,20 @@ final class WhenValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate('Foo', new When(
             expression: 'true',
             constraints: $constraint,
+        ));
+    }
+
+    public function testOtherwiseIsExecutedWhenFalse()
+    {
+        $constraint = new NotNull();
+        $otherwise = new Length(exactly: 10);
+
+        $this->expectValidateValue(0, 'Foo', [$otherwise]);
+
+        $this->validator->validate('Foo', new When(
+            expression: 'false',
+            constraints: $constraint,
+            otherwise: $otherwise,
         ));
     }
 
@@ -154,6 +169,21 @@ final class WhenValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate('', new When(
             expression: 'false',
             constraints: $constraints,
+        ));
+
+        $this->assertNoViolation();
+    }
+
+    public function testOtherwiseIsExecutedWhenTrue()
+    {
+        $constraints = [new NotNull()];
+
+        $this->expectValidateValue(0, '', $constraints);
+
+        $this->validator->validate('', new When(
+            expression: 'true',
+            constraints: $constraints,
+            otherwise: new Length(exactly: 10),
         ));
 
         $this->assertNoViolation();

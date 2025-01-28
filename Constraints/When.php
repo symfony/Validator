@@ -28,6 +28,7 @@ class When extends Composite
     public string|Expression $expression;
     public array|Constraint $constraints = [];
     public array $values = [];
+    public array|Constraint $otherwise = [];
 
     /**
      * @param string|Expression|array<string,mixed> $expression  The condition to evaluate, written with the ExpressionLanguage syntax
@@ -35,9 +36,10 @@ class When extends Composite
      * @param array<string,mixed>|null              $values      The values of the custom variables used in the expression (defaults to [])
      * @param string[]|null                         $groups
      * @param array<string,mixed>|null              $options
+     * @param Constraint[]|Constraint               $otherwise   One or multiple constraints that are applied if the expression returns false
      */
     #[HasNamedArguments]
-    public function __construct(string|Expression|array $expression, array|Constraint|null $constraints = null, ?array $values = null, ?array $groups = null, $payload = null, ?array $options = null)
+    public function __construct(string|Expression|array $expression, array|Constraint|null $constraints = null, ?array $values = null, ?array $groups = null, $payload = null, ?array $options = null, array|Constraint $otherwise = [])
     {
         if (!class_exists(ExpressionLanguage::class)) {
             throw new LogicException(\sprintf('The "symfony/expression-language" component is required to use the "%s" constraint. Try running "composer require symfony/expression-language".', __CLASS__));
@@ -56,10 +58,15 @@ class When extends Composite
 
             $options['expression'] = $expression;
             $options['constraints'] = $constraints;
+            $options['otherwise'] = $otherwise;
         }
 
-        if (isset($options['constraints']) && !\is_array($options['constraints'])) {
+        if (!\is_array($options['constraints'] ?? [])) {
             $options['constraints'] = [$options['constraints']];
+        }
+
+        if (!\is_array($options['otherwise'] ?? [])) {
+            $options['otherwise'] = [$options['otherwise']];
         }
 
         if (null !== $groups) {
@@ -85,8 +92,8 @@ class When extends Composite
         return [self::CLASS_CONSTRAINT, self::PROPERTY_CONSTRAINT];
     }
 
-    protected function getCompositeOption(): string
+    protected function getCompositeOption(): array|string
     {
-        return 'constraints';
+        return ['constraints', 'otherwise'];
     }
 }
